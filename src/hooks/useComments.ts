@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { collection, orderBy, query, onSnapshot } from 'firebase/firestore';
+import { collection, orderBy, query, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Comment } from '@/types/comment';
 
@@ -7,10 +7,12 @@ export const useComments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const q = query(collection(db, 'messages'), orderBy('createdAt', 'asc'));
-    
-    const unsubscribe = onSnapshot(q, (snapshot) => {
+  // コメントを取得する関数
+  const fetchComments = async () => {
+    try {
+      const q = query(collection(db, 'messages'), orderBy('createdAt', 'asc'));
+      const snapshot = await getDocs(q);
+      
       const commentsData: Comment[] = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
@@ -26,9 +28,21 @@ export const useComments = () => {
       });
       setComments(commentsData);
       setLoading(false);
-    });
+    } catch (error) {
+      console.error('コメントの取得に失敗:', error);
+      setLoading(false);
+    }
+  };
 
-    return () => unsubscribe();
+  useEffect(() => {
+    // 初回読み込み
+    fetchComments();
+
+    // 2分間隔で更新
+    const interval = setInterval(fetchComments, 120000);
+
+    // クリーンアップ
+    return () => clearInterval(interval);
   }, []);
 
   return { comments, loading };
