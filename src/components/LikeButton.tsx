@@ -67,13 +67,13 @@ export default function LikeButton({
       aria-pressed={isLiked}
       aria-label={`${isLiked ? 'いいねを解除' : 'いいね'}: ${likes}件`}
       className={`
-        group inline-flex items-center gap-2 px-4 py-2.5 rounded-full
+        group relative inline-flex items-center gap-2.5 px-5 py-3 rounded-full
         transition-all duration-300 ease-out transform
         ${isLiked 
-          ? 'text-white bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 border-2 border-pink-300/50 shadow-lg' 
-          : 'text-gray-600 bg-white/90 hover:bg-white hover:text-pink-500 border-2 border-gray-200 hover:border-pink-300/50 shadow-md hover:shadow-lg'
+          ? 'text-white bg-accent hover:bg-accent/90 border border-accent/30 shadow-elegant' 
+          : 'text-muted bg-white/80 hover:bg-white hover:text-accent border border-accent/20 hover:border-accent/30 shadow-elegant/50 hover:shadow-elegant'
         }
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer focus:outline-none focus:ring-4 focus:ring-pink-200'}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/30'}
         ${isAnimating ? 'pointer-events-none' : ''}
         backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0
       `}
@@ -81,26 +81,26 @@ export default function LikeButton({
       {/* ハートアイコン */}
       <span 
         className={`
-          text-xl leading-none transition-all duration-300
-          ${isLiked ? 'text-white' : 'text-gray-400 group-hover:text-pink-500'}
+          text-lg leading-none transition-all duration-300
+          ${isLiked ? 'text-white' : 'text-muted group-hover:text-accent'}
           ${isAnimating && isLiked ? 'animate-heartBeat scale-125' : ''}
           ${isAnimating && !isLiked ? 'animate-pop scale-110' : ''}
         `}
       >
-        {isLiked ? '💖' : '🤍'}
+        {isLiked ? '💚' : '🤍'}
       </span>
       
       {/* いいね数 */}
       <span className={`
-        text-sm font-bold transition-colors duration-300
-        ${isLiked ? 'text-white' : 'text-gray-600 group-hover:text-pink-600'}
+        text-sm font-medium transition-colors duration-300
+        ${isLiked ? 'text-white' : 'text-muted group-hover:text-accent'}
       `}>
         {likes}
       </span>
       
-      {/* かわいい装飾 */}
+      {/* 上品な装飾 */}
       {isLiked && (
-        <div className="absolute -top-1 -right-1 w-2 h-2 bg-pink-300 rounded-full animate-ping"></div>
+        <div className="absolute -top-1 -right-1 w-2 h-2 bg-accent/60 rounded-full animate-ping"></div>
       )}
       
       {/* アクセシビリティ用の説明 */}

@@ -8,35 +8,48 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: 'var(--bg-primary)',
-        foreground: 'var(--text-primary)',
-        muted: 'var(--text-muted)',
-        accent: 'var(--accent-pink)',
-        ink: 'var(--text-primary)',
+        // 上品で温かいデザインカラー
+        'bg-start': '#fff6f3',      // ピンク寄りアイボリー
+        'bg-end': '#fdeee7',        // 温かいアイボリー
+        'accent': '#2ebd85',        // ブーケグリーン
+        'ink': '#3a2e2b',           // 温かいこげ茶
+        'muted': '#8d7f79',         // ミュートされた色
+        'bubble-left': '#ffffff',    // 左側バブル（他者）
+        'bubble-right': '#d6f5e8',  // 右側バブル（自分）
+        'gold': '#eacc7c',          // ゴールド
+        'gold-light': '#f7e7b4',    // ライトゴールド
+        'bokeh': 'rgba(255, 255, 255, 0.1)', // ボケ風装飾
       },
       borderRadius: {
         'radius-small': 'var(--radius-small)',
         'radius-medium': 'var(--radius-medium)',
         'radius-large': 'var(--radius-large)',
         'radius-bubble': 'var(--radius-bubble)',
+        '22': '22px',
+        '28': '28px',
       },
       boxShadow: {
         'shadow-soft': 'var(--shadow-soft)',
         'shadow-medium': 'var(--shadow-medium)',
         'shadow-bubble': 'var(--shadow-bubble)',
+        'elegant': '0 8px 24px rgba(0,0,0,.08)',
+        'inner-soft': 'inset 0 1px 2px rgba(0,0,0,.05)',
       },
       animation: {
-        'fadeSlideIn': 'fadeSlideIn 0.3s ease-out',
+        'fadeSlideIn': 'fadeSlideIn 0.18s ease-out',
         'pop': 'pop 0.3s ease-out',
-        'heartBeat': 'heartBeat 1.3s ease-in-out',
         'floatBokeh': 'floatBokeh 6s ease-in-out infinite',
+        'heartBeat': 'heartBeat 1.3s ease-in-out',
         'typing': 'typing 1.4s ease-in-out infinite',
+        'bounce': 'bounce 1s infinite',
+        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
       keyframes: {
         fadeSlideIn: {
           'from': {
             opacity: '0',
-            transform: 'translateY(10px)',
+            transform: 'translateY(8px)',
           },
           'to': {
             opacity: '1',
@@ -72,6 +85,42 @@ module.exports = {
           '80%': { transform: 'translateY(5px)' },
           '100%': { transform: 'translateY(0)' },
         },
+        bounce: {
+          '0%, 20%, 53%, 80%, 100%': {
+            transform: 'translate3d(0,0,0)',
+          },
+          '40%, 43%': {
+            transform: 'translate3d(0,-30px,0)',
+          },
+          '70%': {
+            transform: 'translate3d(0,-15px,0)',
+          },
+          '90%': {
+            transform: 'translate3d(0,-4px,0)',
+          },
+        },
+        pulse: {
+          '0%, 100%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '.5',
+          },
+        },
+        ping: {
+          '75%, 100%': {
+            transform: 'scale(2)',
+            opacity: '0',
+          },
+        },
+      },
+      maxWidth: {
+        'content': '1000px',
+        'content-wide': '1100px',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
       },
     },
   },

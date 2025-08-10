@@ -31,42 +31,42 @@ export default function MessageList() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-400 mx-auto mb-6"></div>
-          <p className="text-gray-600 font-medium text-lg">メッセージを読み込み中...</p>
-          <div className="mt-4 text-2xl animate-pulse">💕</div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-accent mx-auto mb-6"></div>
+          <p className="text-muted font-medium text-lg">メッセージを読み込み中...</p>
+          <div className="mt-4 text-2xl animate-pulse text-accent">💚</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="relative">
-      {/* LINE風チャットルーム */}
-      <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 overflow-hidden">
-        {/* チャットルームヘッダー */}
-        <div className="bg-gradient-to-r from-pink-400 to-purple-500 px-6 py-4 text-white">
+    <div className="relative max-w-content mx-auto">
+      {/* 上品なメッセージコンテナ */}
+      <div className="bg-white/95 backdrop-blur-sm rounded-[28px] shadow-elegant border border-accent/10 overflow-hidden">
+        {/* コンテナヘッダー */}
+        <div className="bg-gradient-to-r from-accent/10 to-accent/20 px-6 py-4 border-b border-accent/20">
           <div className="flex items-center justify-center">
-            <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
-            <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
-            <div className="w-3 h-3 bg-white rounded-full"></div>
-            <span className="ml-4 font-bold text-lg">💬 お祝いメッセージ</span>
+            <div className="w-2 h-2 bg-accent rounded-full mr-2"></div>
+            <div className="w-2 h-2 bg-accent rounded-full mr-2"></div>
+            <div className="w-2 h-2 bg-accent rounded-full"></div>
+            <span className="ml-4 font-medium text-ink text-sm">お祝いメッセージ</span>
           </div>
         </div>
         
         {/* メッセージエリア */}
         <div 
           ref={scrollRef} 
-          className="h-[65vh] md:h-[70vh] overflow-y-auto p-4 space-y-2 relative scroll-smooth bg-gradient-to-b from-pink-50/50 to-purple-50/50"
+          className="h-[65vh] md:h-[70vh] overflow-y-auto p-6 space-y-4 relative scroll-smooth bg-gradient-to-b from-bg-start/30 to-bg-end/30"
         >
           {comments.length === 0 ? (
             <div className="text-center py-20">
-              <div className="text-8xl mb-6 animate-bounce">💌</div>
-              <h3 className="text-2xl font-bold text-gray-700 mb-3">まだメッセージがありません</h3>
-              <p className="text-gray-500 text-lg mb-4">最初のメッセージを投稿してみませんか？</p>
-              <div className="text-4xl animate-pulse">✨💖✨</div>
+              <div className="text-6xl mb-6 animate-floatBokeh text-accent">💌</div>
+              <h3 className="text-2xl font-serif font-bold text-ink mb-3">まだメッセージがありません</h3>
+              <p className="text-muted text-lg mb-4">最初のメッセージを投稿してみませんか？</p>
+              <div className="text-3xl animate-pulse text-accent">✨💚✨</div>
             </div>
           ) : (
-            <div className="space-y-2">
+            <div className="space-y-4">
               {comments.map((comment) => (
                 <div key={comment.id}>
                   <MessageBubble 
@@ -80,19 +80,19 @@ export default function MessageList() {
           )}
         </div>
         
-        {/* チャットルームフッター */}
-        <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 text-center border-t border-pink-200/50">
-          <div className="flex items-center justify-center space-x-2 text-gray-600">
-            <span className="text-sm">💕</span>
+        {/* コンテナフッター */}
+        <div className="bg-gradient-to-r from-accent/5 to-accent/10 p-4 text-center border-t border-accent/20">
+          <div className="flex items-center justify-center space-x-2 text-muted">
+            <span className="text-sm">💚</span>
             <p className="font-medium text-sm">リアルタイムで更新中...</p>
-            <span className="text-sm">💕</span>
+            <span className="text-sm">💚</span>
           </div>
         </div>
       </div>
       
-      {/* かわいい装飾要素 */}
-      <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full opacity-60 animate-pulse"></div>
-      <div className="absolute -top-4 -right-4 w-6 h-6 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full opacity-70 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+      {/* 上品な装飾要素 */}
+      <div className="absolute -top-4 -left-4 w-6 h-6 bg-accent/20 rounded-full animate-pulse"></div>
+      <div className="absolute -top-4 -right-4 w-4 h-4 bg-accent/30 rounded-full animate-floatBokeh" style={{ animationDelay: '1s' }}></div>
     </div>
   );
 }

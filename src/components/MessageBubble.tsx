@@ -35,44 +35,44 @@ export default function MessageBubble({ comment, isOwn, currentUser }: MessageBu
   // 左右配置に応じたスタイル設定
   const isRight = isOwn;
   const containerClass = isRight ? 'justify-end' : 'justify-start';
-  const avatarClass = isRight ? 'ml-3' : 'mr-3';
+  const avatarClass = isRight ? 'ml-4' : 'mr-4';
 
   return (
-    <div className={`flex ${containerClass} my-4 mx-3 animate-fadeSlideIn`}>
-      <div className={`max-w-[80%] ${isRight ? 'order-2' : 'order-1'}`}>
+    <div className={`flex ${containerClass} my-5 mx-4 animate-fadeSlideIn`}>
+      <div className={`max-w-[78%] ${isRight ? 'order-2' : 'order-1'}`}>
         <div className={`flex items-end ${isRight ? 'flex-row-reverse' : 'flex-row'}`}>
-          {/* かわいいアバター */}
-          <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 flex items-center justify-center text-lg font-bold text-white shadow-lg ${avatarClass} flex-shrink-0 border-3 border-white/80 ring-2 ring-pink-200/50`}>
+          {/* 上品なアバター */}
+          <div className={`w-14 h-14 rounded-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center text-lg font-bold text-ink shadow-elegant ${avatarClass} flex-shrink-0 border border-accent/30 ring-1 ring-accent/20`}>
             {comment.nickname.charAt(0).toUpperCase()}
           </div>
           
-          {/* LINE風チャットバブル */}
+          {/* 上品なチャットバブル */}
           <div className={`relative px-5 py-4 w-full ${isRight ? 'order-1' : 'order-2'}`}>
             {/* ニックネーム */}
-            <div className={`font-bold mb-2 text-sm ${isRight ? 'text-white/90' : 'text-gray-700'} ${isRight ? 'text-right' : 'text-left'}`}>
+            <div className={`font-medium mb-2 text-xs text-muted ${isRight ? 'text-right' : 'text-left'}`}>
               {comment.nickname}
             </div>
             
             {/* チャットバブル本体 */}
-            <div className={`relative ${isRight ? 'bg-gradient-to-r from-pink-400 to-purple-500' : 'bg-white'} rounded-3xl px-5 py-3 shadow-lg border ${isRight ? 'border-pink-300/30' : 'border-gray-200'}`}>
+            <div className={`relative ${isRight ? 'bg-bubble-right' : 'bg-bubble-left'} rounded-[28px] px-5 py-3 shadow-elegant border border-accent/10 shadow-inner-soft`}>
               {/* チャットバブルの尻尾 */}
-              <div className={`absolute top-4 ${isRight ? '-right-2' : '-left-2'} w-4 h-4 ${isRight ? 'bg-gradient-to-r from-pink-400 to-purple-500' : 'bg-white'} transform rotate-45 border-r border-b ${isRight ? 'border-pink-300/30' : 'border-gray-200'}`}></div>
+              <div className={`absolute top-4 ${isRight ? '-right-2' : '-left-2'} w-3 h-3 ${isRight ? 'bg-bubble-right' : 'bg-bubble-left'} transform rotate-45 border-r border-b ${isRight ? 'border-accent/20' : 'border-accent/10'}`}></div>
               
               {/* コメントテキスト */}
-              <div className={`break-words text-base leading-relaxed whitespace-pre-wrap font-medium ${isRight ? 'text-white' : 'text-gray-800'}`}>
+              <div className={`break-words text-lg leading-relaxed whitespace-pre-wrap text-ink font-normal`}>
                 {comment.comment}
               </div>
             </div>
             
             {/* 時刻 */}
-            <div className={`mt-3 text-xs ${isRight ? 'text-white/70' : 'text-gray-500'} ${isRight ? 'text-right' : 'text-left'}`}>
+            <div className={`mt-3 text-xs text-muted/70 ${isRight ? 'text-right' : 'text-left'}`}>
               {formatTime(comment.createdAt)}
             </div>
           </div>
         </div>
 
         {/* いいねボタン */}
-        <div className={`mt-3 ${isRight ? 'text-right' : 'text-left'} flex ${isRight ? 'justify-end' : 'justify-start'}`}>
+        <div className={`mt-4 ${isRight ? 'text-right' : 'text-left'} flex ${isRight ? 'justify-end' : 'justify-start'}`}>
           <LikeButton
             initialLikes={initialLikes}
             onLike={handleLike}
