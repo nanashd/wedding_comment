@@ -1,5 +1,5 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, Firestore } from 'firebase/firestore';
+import { getFirestore, Firestore, doc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
 
 // 環境変数から設定を読み込み
 const firebaseConfig = {
@@ -47,3 +47,29 @@ try {
 
 export { db };
 export default app;
+
+// いいね機能の関数
+export const toggleLike = async (commentId: string, nickname: string, isLiked: boolean) => {
+  try {
+    const commentRef = doc(db, 'messages', commentId);
+    
+    if (isLiked) {
+      // いいねを削除
+      await updateDoc(commentRef, {
+        likes: increment(-1),
+        likedBy: arrayRemove(nickname)
+      });
+    } else {
+      // いいねを追加
+      await updateDoc(commentRef, {
+        likes: increment(1),
+        likedBy: arrayUnion(nickname)
+      });
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('いいねの更新に失敗:', error);
+    return false;
+  }
+};

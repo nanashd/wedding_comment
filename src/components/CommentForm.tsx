@@ -8,139 +8,162 @@ export default function CommentForm() {
   const [nickname, setNickname] = useState('');
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nickname.trim() || !comment.trim()) return;
 
-    console.log('投稿開始 - loading状態をtrueに設定');
     setLoading(true);
-    setError(null);
-    
+    setError('');
+    setSuccess('');
+
     try {
-      console.log('Firestore保存処理開始');
-      console.log('保存するデータ:', {
-        nickname: nickname.trim(),
-        comment: comment.trim(),
-        createdAt: 'serverTimestamp()'
-      });
-      
       // Firestoreに保存
-      const docRef = await addDoc(collection(db, "messages"), {
+      await addDoc(collection(db, 'messages'), {
         nickname: nickname.trim(),
         comment: comment.trim(),
         createdAt: serverTimestamp(),
+        likes: 0, // 初期いいね数
+        likedBy: [], // 初期いいねユーザー配列
       });
-      console.log('Firestore保存完了 - ドキュメントID:', docRef.id);
 
-      console.log('フォームクリア処理開始');
-      // フォームをクリア
-      setNickname('');
+      // 投稿成功時の処理
       setComment('');
-      console.log('フォームクリア完了');
-
-      // 送信完了状態を表示
-      setSubmitted(true);
-      console.log('送信完了状態設定完了');
+      setNickname('');
       
-      // 2秒後に送信完了状態を解除
-      setTimeout(() => {
-        setSubmitted(false);
-        console.log('送信完了状態解除完了');
-      }, 2000);
-
+      // ユーザー名をローカルストレージに保存（いいね機能用）
+      localStorage.setItem('wedding-comment-user', nickname.trim());
+      
+      // 成功メッセージを表示
+      setSuccess('メッセージが投稿されました！💕');
+      setTimeout(() => setSuccess(''), 3000);
+      
     } catch (error: unknown) {
-      console.error('送信エラー詳細:', error);
+      console.error('投稿エラー:', error);
       
-      let errorMessage = '投稿に失敗しました。';
-      
+      // エラーメッセージの設定
       if (error && typeof error === 'object' && 'code' in error) {
-        const firebaseError = error as { code: string; message?: string };
-        console.error('エラーコード:', firebaseError.code);
-        console.error('エラーメッセージ:', firebaseError.message);
-        
-        if (firebaseError.code === 'permission-denied') {
-          errorMessage = '権限がありません。Firestoreのセキュリティルールを確認してください。';
-        } else if (firebaseError.code === 'unavailable') {
-          errorMessage = 'Firebaseサービスが利用できません。ネットワーク接続を確認してください。';
-        } else if (firebaseError.code === 'unauthenticated') {
-          errorMessage = '認証が必要です。';
+        if (error.code === 'permission-denied') {
+          setError('権限がありません。Firestoreのセキュリティルールを確認してください。');
+        } else if (error.code === 'unavailable') {
+          setError('Firestoreが利用できません。ネットワーク接続を確認してください。');
+        } else {
+          setError(`投稿に失敗しました: ${error.code}`);
         }
+      } else {
+        setError('投稿に失敗しました。しばらく時間をおいて再度お試しください。');
       }
-      
-      setError(errorMessage);
-      alert(errorMessage);
     } finally {
-      console.log('finallyブロック実行 - loading状態をfalseに設定');
-      // 成功・失敗問わず必ずローディング解除
       setLoading(false);
-      console.log('loading状態をfalseに設定完了');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-[var(--radius-large)] shadow-[var(--shadow-soft)] relative">
-      <h2 className="text-2xl font-serif font-bold text-center mb-8 text-[var(--ink)]">
-        コメントを投稿
+    <div className="max-w-lg mx-auto p-8 bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/50 relative overflow-hidden">
+      {/* かわいい装飾要素 */}
+      <div className="absolute -top-2 -left-2 w-6 h-6 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full opacity-60 animate-pulse"></div>
+      <div className="absolute -top-2 -right-2 w-4 h-4 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full opacity-70 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+      
+      <h2 className="text-3xl font-bold text-center mb-8 text-gray-800 relative">
+        <span className="bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+          コメントを投稿 💕
+        </span>
       </h2>
       
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-[var(--radius-bubble)] animate-fadeSlideIn">
-          <p className="text-sm font-sans">{error}</p>
+        <div className="mb-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-2xl animate-fadeSlideIn">
+          <div className="flex items-center">
+            <span className="text-xl mr-2">⚠️</span>
+            <p className="text-sm font-medium">{error}</p>
+          </div>
         </div>
       )}
       
+      {success && (
+        <div className="mb-6 p-4 bg-green-50 border-2 border-green-200 text-green-700 rounded-2xl animate-fadeSlideIn">
+          <div className="flex items-center">
+            <span className="text-xl mr-2">🎉</span>
+            <p className="text-sm font-medium">{success}</p>
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="nickname" className="block text-sm font-medium text-[var(--ink)] mb-2 font-sans">
-            ニックネーム <span className="text-red-500">*</span>
+          <label htmlFor="nickname" className="block text-sm font-bold text-gray-700 mb-3">
+            <span className="flex items-center">
+              <span className="mr-2">👤</span>
+              ニックネーム <span className="text-red-500 ml-1">*</span>
+            </span>
           </label>
           <input
             type="text"
             id="nickname"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="w-full px-4 py-3 text-base text-[var(--ink)] bg-white/80 border-2 border-[var(--muted)]/30 rounded-[var(--radius-bubble)] placeholder:text-[var(--muted)]/60 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all duration-200 font-sans"
+            className="w-full px-5 py-4 text-base text-gray-800 bg-white/80 border-2 border-pink-200/50 rounded-2xl placeholder:text-gray-400 focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 transition-all duration-200 font-medium shadow-sm"
             placeholder="あなたの名前"
             required
             maxLength={20}
             aria-describedby="nickname-help"
           />
-          <p id="nickname-help" className="mt-1 text-xs text-[var(--muted)] font-sans">
-            最大20文字まで
+          <p id="nickname-help" className="mt-2 text-xs text-gray-500 font-medium">
+            最大20文字まで ✨
           </p>
         </div>
 
         <div>
-          <label htmlFor="comment" className="block text-sm font-medium text-[var(--ink)] mb-2 font-sans">
-            コメント <span className="text-red-500">*</span>
+          <label htmlFor="comment" className="block text-sm font-bold text-gray-700 mb-3">
+            <span className="flex items-center">
+              <span className="mr-2">💬</span>
+              コメント <span className="text-red-500 ml-1">*</span>
+            </span>
           </label>
           <textarea
             id="comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className="w-full px-4 py-3 text-base text-[var(--ink)] bg-white/80 border-2 border-[var(--muted)]/30 rounded-[var(--radius-bubble)] placeholder:text-[var(--muted)]/60 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 resize-none transition-all duration-200 font-sans"
-            placeholder="お祝いのメッセージを入力してください"
+            className="w-full px-5 py-4 text-base text-gray-800 bg-white/80 border-2 border-pink-200/50 rounded-2xl placeholder:text-gray-400 focus:outline-none focus:border-pink-400 focus:ring-4 focus:ring-pink-100 resize-none transition-all duration-200 font-medium shadow-sm"
+            placeholder="お祝いのメッセージを入力してください 💕"
             rows={4}
             required
             maxLength={200}
             aria-describedby="comment-help"
           />
-          <p id="comment-help" className="mt-1 text-xs text-[var(--muted)] font-sans">
-            {comment.length}/200文字
+          <p id="comment-help" className="mt-2 text-xs text-gray-500 font-medium">
+            {comment.length}/200文字 💝
           </p>
         </div>
 
         <button
           type="submit"
           disabled={loading || !nickname.trim() || !comment.trim()}
-          className="w-full bg-gradient-to-r from-[var(--accent)] to-emerald-500 text-white py-4 px-6 rounded-[var(--radius-bubble)] font-medium font-sans hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
+          className="w-full bg-gradient-to-r from-pink-400 via-purple-500 to-pink-500 text-white py-5 px-6 rounded-2xl font-bold text-lg hover:from-pink-500 hover:via-purple-600 hover:to-pink-600 focus:outline-none focus:ring-4 focus:ring-pink-200 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1 active:translate-y-0 relative overflow-hidden group"
         >
-          {loading ? '送信中...' : submitted ? '送信完了' : '送信'}
+          {/* かわいい装飾 */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+          
+          <span className="relative flex items-center justify-center">
+            {loading ? (
+              <>
+                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></span>
+                送信中...
+              </>
+            ) : (
+              <>
+                <span className="mr-2">💌</span>
+                送信
+              </>
+            )}
+          </span>
         </button>
       </form>
+      
+      {/* かわいい装飾要素（下部） */}
+      <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full opacity-60 animate-bounce" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute -bottom-2 -right-2 w-5 h-5 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full opacity-70 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
     </div>
   );
 }

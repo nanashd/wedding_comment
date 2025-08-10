@@ -1,13 +1,16 @@
 'use client';
 
 import { Comment } from '@/types/comment';
+import LikeButton from './LikeButton';
+import { toggleLike } from '@/lib/firebase';
 
 interface MessageBubbleProps {
   comment: Comment;
   isOwn: boolean;
+  currentUser?: string; // 現在のユーザーのニックネーム
 }
 
-export default function MessageBubble({ comment, isOwn }: MessageBubbleProps) {
+export default function MessageBubble({ comment, isOwn, currentUser }: MessageBubbleProps) {
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('ja-JP', {
       hour: '2-digit',
@@ -15,52 +18,67 @@ export default function MessageBubble({ comment, isOwn }: MessageBubbleProps) {
     });
   };
 
+  // いいねの状態を管理
+  const isLiked = currentUser ? comment.likedBy.includes(currentUser) : false;
+  const initialLikes = comment.likes || 0;
+
+  // いいねの処理
+  const handleLike = async () => {
+    if (!currentUser) return;
+    
+    const success = await toggleLike(comment.id, currentUser, isLiked);
+    if (!success) {
+      console.error('いいねの更新に失敗しました');
+    }
+  };
+
   // 左右配置に応じたスタイル設定
   const isRight = isOwn;
-  const bubbleBg = isRight ? 'bg-[var(--bubble-right)]' : 'bg-[var(--bubble-left)]';
-  const textColor = 'text-[var(--ink)]';
-  const nicknameColor = 'text-[var(--muted)]';
-  const timeColor = 'text-[var(--muted)] opacity-70';
-  const tailPosition = isRight ? 'right-[-6px]' : 'left-[-6px]';
-  const tailColor = isRight ? 'border-l-[var(--bubble-right)]' : 'border-r-[var(--bubble-left)]';
+  const containerClass = isRight ? 'justify-end' : 'justify-start';
+  const avatarClass = isRight ? 'ml-3' : 'mr-3';
 
   return (
-    <div className={`flex ${isRight ? 'justify-end' : 'justify-start'} my-4 mx-2 animate-fadeSlideIn`}>
-      <div className={`max-w-[78%] md:max-w-[75%] ${isRight ? 'order-2' : 'order-1'}`}>
+    <div className={`flex ${containerClass} my-4 mx-3 animate-fadeSlideIn`}>
+      <div className={`max-w-[80%] ${isRight ? 'order-2' : 'order-1'}`}>
         <div className={`flex items-end ${isRight ? 'flex-row-reverse' : 'flex-row'}`}>
-          {/* アバター */}
-          <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-pink-200 to-green-200 flex items-center justify-center text-base md:text-lg font-medium text-[var(--ink)] shadow-sm ${isRight ? 'ml-3' : 'mr-3'} flex-shrink-0`}>
+          {/* かわいいアバター */}
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-pink-300 via-purple-300 to-blue-300 flex items-center justify-center text-lg font-bold text-white shadow-lg ${avatarClass} flex-shrink-0 border-3 border-white/80 ring-2 ring-pink-200/50`}>
             {comment.nickname.charAt(0).toUpperCase()}
           </div>
           
-          {/* 吹き出し */}
-          <div className={`relative ${bubbleBg} rounded-[var(--radius-large)] px-5 py-4 shadow-[var(--shadow-soft)] w-full`}>
-            {/* 吹き出しの尻尾 */}
-            <div className={`absolute top-4 ${tailPosition} w-0 h-0 border-4 border-transparent ${tailColor}`} />
-            
+          {/* LINE風チャットバブル */}
+          <div className={`relative px-5 py-4 w-full ${isRight ? 'order-1' : 'order-2'}`}>
             {/* ニックネーム */}
-            <div className={`font-medium mb-2 ${nicknameColor} text-sm md:text-base`}>
+            <div className={`font-bold mb-2 text-sm ${isRight ? 'text-white/90' : 'text-gray-700'} ${isRight ? 'text-right' : 'text-left'}`}>
               {comment.nickname}
             </div>
             
-            {/* コメントテキスト */}
-            <div className={`${textColor} break-words text-base md:text-lg leading-relaxed whitespace-pre-wrap`}>
-              {comment.comment}
+            {/* チャットバブル本体 */}
+            <div className={`relative ${isRight ? 'bg-gradient-to-r from-pink-400 to-purple-500' : 'bg-white'} rounded-3xl px-5 py-3 shadow-lg border ${isRight ? 'border-pink-300/30' : 'border-gray-200'}`}>
+              {/* チャットバブルの尻尾 */}
+              <div className={`absolute top-4 ${isRight ? '-right-2' : '-left-2'} w-4 h-4 ${isRight ? 'bg-gradient-to-r from-pink-400 to-purple-500' : 'bg-white'} transform rotate-45 border-r border-b ${isRight ? 'border-pink-300/30' : 'border-gray-200'}`}></div>
+              
+              {/* コメントテキスト */}
+              <div className={`break-words text-base leading-relaxed whitespace-pre-wrap font-medium ${isRight ? 'text-white' : 'text-gray-800'}`}>
+                {comment.comment}
+              </div>
             </div>
             
             {/* 時刻 */}
-            <div className={`mt-3 ${timeColor} text-right text-xs md:text-sm`}>
+            <div className={`mt-3 text-xs ${isRight ? 'text-white/70' : 'text-gray-500'} ${isRight ? 'text-right' : 'text-left'}`}>
               {formatTime(comment.createdAt)}
             </div>
           </div>
         </div>
 
-        {/* いいね表示 */}
-        <div className={`mt-2 ${isRight ? 'text-right' : 'text-left'} flex ${isRight ? 'justify-end' : 'justify-start'}`}>
-          <div className="inline-flex items-center gap-1">
-            <span className="text-2xl leading-none text-pink-400">♡</span>
-            <span className="text-sm leading-none text-[var(--muted)]">{comment.likes ?? 0}</span>
-          </div>
+        {/* いいねボタン */}
+        <div className={`mt-3 ${isRight ? 'text-right' : 'text-left'} flex ${isRight ? 'justify-end' : 'justify-start'}`}>
+          <LikeButton
+            initialLikes={initialLikes}
+            onLike={handleLike}
+            disabled={!currentUser}
+            isLiked={isLiked}
+          />
         </div>
       </div>
     </div>

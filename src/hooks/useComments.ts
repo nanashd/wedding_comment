@@ -20,6 +20,8 @@ export const useComments = () => {
           comment: data.comment,
           createdAt: data.createdAt?.toDate() || new Date(),
           isLeft: Math.random() < 0.5, // ランダムな左右配置
+          likes: data.likes || 0, // いいね数
+          likedBy: data.likedBy || [], // いいねしたユーザー配列
         });
       });
       setComments(commentsData);

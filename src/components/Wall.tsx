@@ -6,54 +6,65 @@ interface WallProps {
   children: ReactNode;
 }
 
-export default function Wall({ children }: WallProps) {
+export default function Wall({ children }: ReactNode) {
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* 背景グラデーション */}
-      <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-start)] to-[var(--bg-end)]" />
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+      {/* かわいい装飾要素 */}
+      <div className="absolute top-10 left-8 w-6 h-6 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full opacity-60 animate-bounce"></div>
+      <div className="absolute top-32 right-12 w-4 h-4 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full opacity-70 animate-pulse"></div>
+      <div className="absolute bottom-40 left-20 w-5 h-5 bg-gradient-to-r from-pink-400 to-purple-400 rounded-full opacity-50 animate-bounce" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute top-1/2 right-20 w-3 h-3 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-60 animate-pulse" style={{ animationDelay: '2s' }}></div>
       
-      {/* 装飾要素 - 左上のリング */}
-      <div className="fixed top-8 left-8 w-32 h-32 opacity-25 pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" stroke="var(--gold-light)" strokeWidth="2" fill="none" opacity="0.6"/>
-          <circle cx="50" cy="50" r="35" stroke="var(--gold-dark)" strokeWidth="1" fill="none" opacity="0.4"/>
-          <circle cx="50" cy="50" r="25" stroke="var(--gold-light)" strokeWidth="1" fill="none" opacity="0.3"/>
-        </svg>
-      </div>
+      {/* かわいい装飾ライン */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300"></div>
       
-      {/* 装飾要素 - 右上のチャペル */}
-      <div className="fixed top-8 right-8 w-32 h-32 opacity-30 pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 80 L50 20 L80 80 L70 80 L70 90 L30 90 L30 80 Z" fill="var(--gold-light)" opacity="0.4"/>
-          <rect x="40" y="80" width="20" height="10" fill="var(--gold-dark)" opacity="0.3"/>
-          <circle cx="50" cy="30" r="3" fill="var(--gold-light)" opacity="0.6"/>
-        </svg>
-      </div>
-      
-      {/* Bokeh風の光の玉 */}
-      <div className="fixed top-1/4 left-1/6 w-64 h-64 bg-gradient-to-br from-pink-200/20 to-transparent rounded-full blur-3xl animate-floatBokeh pointer-events-none z-0" />
-      <div className="fixed bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-br from-green-200/20 to-transparent rounded-full blur-3xl animate-floatBokeh pointer-events-none z-0" style={{ animationDelay: '4s' }} />
-      <div className="fixed top-1/2 left-1/2 w-48 h-48 bg-gradient-to-br from-yellow-200/15 to-transparent rounded-full blur-2xl animate-floatBokeh pointer-events-none z-0" style={{ animationDelay: '2s' }} />
-      
-      {/* メインコンテンツ */}
-      <div className="relative z-10">
-        {/* ヘッダー */}
-        <header className="text-center py-12 px-4">
-          <h1 className="text-5xl md:text-6xl font-serif font-bold text-[var(--ink)] mb-4 drop-shadow-sm">
-            結婚式コメントウォール
-          </h1>
-          {/* ゴールドライン */}
-          <div className="w-48 h-0.5 bg-gradient-to-r from-[var(--gold-light)] to-[var(--gold-dark)] mx-auto rounded-full shadow-sm" />
-          <p className="text-lg md:text-xl text-[var(--muted)] mt-6 font-sans">
-            お祝いのメッセージがリアルタイムで表示されます
-          </p>
-        </header>
+      {/* LINE風ヘッダー */}
+      <header className="chat-header text-center py-8 px-4 relative overflow-hidden">
+        {/* 背景装飾 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hearts" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 15c-2-3-4-6-6-8a6 6 0 0 1 0-8 6 6 0 0 1 8 0 6 6 0 0 1 8 0 6 6 0 0 1 0 8c-2 2-4 5-6 8z" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23hearts)"/></svg>')] opacity-50"></div>
         
-        {/* コンテンツエリア */}
-        <main className="container mx-auto px-4 max-w-6xl">
-          {children}
-        </main>
-      </div>
+        {/* かわいいアイコン */}
+        <div className="relative z-10 flex items-center justify-center mb-4">
+          <div className="w-16 h-16 bg-white/30 rounded-full flex items-center justify-center mr-4 backdrop-blur-sm border-2 border-white/50 shadow-lg">
+            <span className="text-3xl">💒</span>
+          </div>
+          <div className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold text-white drop-shadow-lg mb-2">
+              結婚式コメントウォール
+            </h1>
+            <p className="text-base md:text-lg text-white/95 font-medium">
+              💕 お祝いのメッセージ 💕
+            </p>
+          </div>
+        </div>
+        
+        {/* かわいい装飾ライン */}
+        <div className="relative z-10 flex items-center justify-center space-x-3">
+          <div className="w-12 h-1 bg-white/60 rounded-full"></div>
+          <span className="text-white/90 text-lg">✨💖✨</span>
+          <div className="w-12 h-1 bg-white/60 rounded-full"></div>
+        </div>
+        
+        {/* かわいい装飾要素 */}
+        <div className="absolute top-4 left-4 text-2xl opacity-60">🌸</div>
+        <div className="absolute top-4 right-4 text-2xl opacity-60">🌺</div>
+        <div className="absolute bottom-4 left-4 text-2xl opacity-60">🌷</div>
+        <div className="absolute bottom-4 right-4 text-2xl opacity-60">🌹</div>
+      </header>
+
+      {/* メインコンテンツ */}
+      <main className="container mx-auto px-4 max-w-5xl py-6">
+        {children}
+      </main>
+      
+      {/* フッター装飾 */}
+      <div className="fixed bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/90 via-white/50 to-transparent pointer-events-none"></div>
+      
+      {/* かわいい装飾要素（下部） */}
+      <div className="absolute bottom-20 right-8 w-4 h-4 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full opacity-60 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
+      <div className="absolute bottom-32 left-16 w-3 h-3 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full opacity-70 animate-pulse" style={{ animationDelay: '1.5s' }}></div>
     </div>
   );
 }

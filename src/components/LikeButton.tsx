@@ -1,17 +1,35 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface LikeButtonProps {
   initialLikes?: number;
-  onLike?: (likes: number) => void;
+  onLike?: () => void; // パラメータなしで呼び出し
   disabled?: boolean;
+  isLiked?: boolean; // 外部からいいね状態を制御
 }
 
-export default function LikeButton({ initialLikes = 0, onLike, disabled = false }: LikeButtonProps) {
+export default function LikeButton({ 
+  initialLikes = 0, 
+  onLike, 
+  disabled = false, 
+  isLiked: externalIsLiked 
+}: LikeButtonProps) {
   const [likes, setLikes] = useState(initialLikes);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(externalIsLiked || false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // 外部のいいね状態が変更された場合の同期
+  useEffect(() => {
+    if (externalIsLiked !== undefined) {
+      setIsLiked(externalIsLiked);
+    }
+  }, [externalIsLiked]);
+
+  // いいね数の同期
+  useEffect(() => {
+    setLikes(initialLikes);
+  }, [initialLikes]);
 
   const handleLike = () => {
     if (disabled || isAnimating) return;
@@ -21,11 +39,11 @@ export default function LikeButton({ initialLikes = 0, onLike, disabled = false 
     if (!isLiked) {
       setLikes(prev => prev + 1);
       setIsLiked(true);
-      onLike?.(likes + 1);
+      onLike?.();
     } else {
       setLikes(prev => Math.max(0, prev - 1));
       setIsLiked(false);
-      onLike?.(Math.max(0, likes - 1));
+      onLike?.();
     }
 
     // アニメーション完了後に状態をリセット
@@ -49,36 +67,41 @@ export default function LikeButton({ initialLikes = 0, onLike, disabled = false 
       aria-pressed={isLiked}
       aria-label={`${isLiked ? 'いいねを解除' : 'いいね'}: ${likes}件`}
       className={`
-        group inline-flex items-center gap-2 px-3 py-2 rounded-full
-        transition-all duration-200 ease-out
+        group inline-flex items-center gap-2 px-4 py-2.5 rounded-full
+        transition-all duration-300 ease-out transform
         ${isLiked 
-          ? 'text-pink-500 bg-pink-50 hover:bg-pink-100' 
-          : 'text-[var(--muted)] bg-white/60 hover:bg-white/80 hover:text-pink-400'
+          ? 'text-white bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 border-2 border-pink-300/50 shadow-lg' 
+          : 'text-gray-600 bg-white/90 hover:bg-white hover:text-pink-500 border-2 border-gray-200 hover:border-pink-300/50 shadow-md hover:shadow-lg'
         }
-        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer focus-ring'}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer focus:outline-none focus:ring-4 focus:ring-pink-200'}
         ${isAnimating ? 'pointer-events-none' : ''}
-        shadow-sm hover:shadow-md
+        backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0
       `}
     >
       {/* ハートアイコン */}
       <span 
         className={`
-          text-2xl leading-none transition-all duration-200
-          ${isLiked ? 'text-pink-500' : 'text-[var(--muted)] group-hover:text-pink-400'}
-          ${isAnimating && isLiked ? 'animate-heartBeat' : ''}
-          ${isAnimating && !isLiked ? 'animate-pop' : ''}
+          text-xl leading-none transition-all duration-300
+          ${isLiked ? 'text-white' : 'text-gray-400 group-hover:text-pink-500'}
+          ${isAnimating && isLiked ? 'animate-heartBeat scale-125' : ''}
+          ${isAnimating && !isLiked ? 'animate-pop scale-110' : ''}
         `}
       >
-        {isLiked ? '❤️' : '♡'}
+        {isLiked ? '💖' : '🤍'}
       </span>
       
       {/* いいね数 */}
       <span className={`
-        text-sm font-medium transition-colors duration-200
-        ${isLiked ? 'text-pink-600' : 'text-[var(--muted)]'}
+        text-sm font-bold transition-colors duration-300
+        ${isLiked ? 'text-white' : 'text-gray-600 group-hover:text-pink-600'}
       `}>
         {likes}
       </span>
+      
+      {/* かわいい装飾 */}
+      {isLiked && (
+        <div className="absolute -top-1 -right-1 w-2 h-2 bg-pink-300 rounded-full animate-ping"></div>
+      )}
       
       {/* アクセシビリティ用の説明 */}
       <span className="sr-only">

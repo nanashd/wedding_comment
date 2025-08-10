@@ -1,36 +1,39 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useComments } from '@/hooks/useComments';
 import MessageBubble from './MessageBubble';
 
 export default function MessageList() {
   const { comments, loading } = useComments();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const lastCommentRef = useRef<HTMLDivElement>(null);
+  const [currentUser, setCurrentUser] = useState<string>('');
 
-  // 新しいコメントが来たら自動スクロール
+  // ローカルストレージからユーザー名を取得
+  useEffect(() => {
+    const savedUser = localStorage.getItem('wedding-comment-user');
+    if (savedUser) {
+      setCurrentUser(savedUser);
+    }
+  }, []);
+
   useEffect(() => {
     if (scrollRef.current && comments.length > 0) {
       const scrollToBottom = () => {
-        scrollRef.current?.scrollTo({
-          top: scrollRef.current.scrollHeight,
-          behavior: 'smooth'
-        });
+        scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
       };
-      
-      // 少し遅延させてアニメーション完了後にスクロール
-      const timer = setTimeout(scrollToBottom, 200);
+      const timer = setTimeout(scrollToBottom, 200); // アニメーション用の遅延
       return () => clearTimeout(timer);
     }
   }, [comments]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-[var(--accent)] mx-auto mb-6"></div>
-          <p className="text-[var(--muted)] text-lg font-sans">コメントを読み込み中...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-pink-400 mx-auto mb-6"></div>
+          <p className="text-gray-600 font-medium text-lg">メッセージを読み込み中...</p>
+          <div className="mt-4 text-2xl animate-pulse">💕</div>
         </div>
       </div>
     );
@@ -38,40 +41,58 @@ export default function MessageList() {
 
   return (
     <div className="relative">
-      {/* コメントエリア */}
-      <div
-        ref={scrollRef}
-        className="h-[70vh] md:h-[75vh] overflow-y-auto p-4 space-y-2 relative scroll-smooth"
-      >
-        {comments.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center text-[var(--muted)] bg-white/80 backdrop-blur-sm rounded-[var(--radius-large)] p-12 shadow-[var(--shadow-soft)]">
-              <div className="text-6xl mb-6">💬</div>
-              <p className="text-xl font-medium font-serif text-[var(--ink)] mb-2">まだコメントがありません</p>
-              <p className="text-base opacity-80 font-sans">最初のコメントを投稿してみましょう！</p>
+      {/* LINE風チャットルーム */}
+      <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 overflow-hidden">
+        {/* チャットルームヘッダー */}
+        <div className="bg-gradient-to-r from-pink-400 to-purple-500 px-6 py-4 text-white">
+          <div className="flex items-center justify-center">
+            <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
+            <div className="w-3 h-3 bg-white rounded-full mr-2"></div>
+            <div className="w-3 h-3 bg-white rounded-full"></div>
+            <span className="ml-4 font-bold text-lg">💬 お祝いメッセージ</span>
+          </div>
+        </div>
+        
+        {/* メッセージエリア */}
+        <div 
+          ref={scrollRef} 
+          className="h-[65vh] md:h-[70vh] overflow-y-auto p-4 space-y-2 relative scroll-smooth bg-gradient-to-b from-pink-50/50 to-purple-50/50"
+        >
+          {comments.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="text-8xl mb-6 animate-bounce">💌</div>
+              <h3 className="text-2xl font-bold text-gray-700 mb-3">まだメッセージがありません</h3>
+              <p className="text-gray-500 text-lg mb-4">最初のメッセージを投稿してみませんか？</p>
+              <div className="text-4xl animate-pulse">✨💖✨</div>
             </div>
+          ) : (
+            <div className="space-y-2">
+              {comments.map((comment, index) => (
+                <div key={comment.id}>
+                  <MessageBubble 
+                    comment={comment} 
+                    isOwn={comment.nickname === currentUser} 
+                    currentUser={currentUser}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* チャットルームフッター */}
+        <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 text-center border-t border-pink-200/50">
+          <div className="flex items-center justify-center space-x-2 text-gray-600">
+            <span className="text-sm">💕</span>
+            <p className="font-medium text-sm">リアルタイムで更新中...</p>
+            <span className="text-sm">💕</span>
           </div>
-        ) : (
-          <div className="space-y-2">
-            {comments.map((comment, index) => (
-              <div
-                key={comment.id}
-                ref={index === comments.length - 1 ? lastCommentRef : null}
-              >
-                <MessageBubble
-                  comment={comment}
-                  isOwn={index % 2 === 0}
-                />
-              </div>
-            ))}
-          </div>
-        )}
+        </div>
       </div>
-
-      {/* フッター */}
-      <div className="bg-white/90 backdrop-blur-sm p-4 text-center text-[var(--muted)] text-sm border-t border-white/20 rounded-b-[var(--radius-large)] shadow-[var(--shadow-soft)]">
-        <p className="font-sans">リアルタイムで更新中...</p>
-      </div>
+      
+      {/* かわいい装飾要素 */}
+      <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full opacity-60 animate-pulse"></div>
+      <div className="absolute -top-4 -right-4 w-6 h-6 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full opacity-70 animate-bounce" style={{ animationDelay: '0.5s' }}></div>
     </div>
   );
 }
