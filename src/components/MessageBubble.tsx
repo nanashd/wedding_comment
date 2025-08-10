@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Comment } from '@/types/comment';
 import LikeButton from './LikeButton';
 import { toggleLike } from '@/lib/firebase';
@@ -18,17 +19,63 @@ export default function MessageBubble({ comment, isOwn, currentUser }: MessageBu
     });
   };
 
-  // いいねの状態を管理
-  const isLiked = currentUser ? comment.likedBy.includes(currentUser) : false;
-  const initialLikes = comment.likes || 0;
+  // いいねの状態を管理（ローカル状態として管理）
+  const [localLikes, setLocalLikes] = useState(comment.likes || 0);
+  const [localIsLiked, setLocalIsLiked] = useState(currentUser ? comment.likedBy.includes(currentUser) : false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  // コメントの更新時にローカル状態を同期
+  useEffect(() => {
+    setLocalLikes(comment.likes || 0);
+    setLocalIsLiked(currentUser ? comment.likedBy.includes(currentUser) : false);
+  }, [comment.likes, comment.likedBy, currentUser]);
 
   // いいねの処理
   const handleLike = async () => {
-    if (!currentUser) return;
+    if (!currentUser || isUpdating) return;
     
-    const success = await toggleLike(comment.id, currentUser, isLiked);
-    if (!success) {
-      console.error('いいねの更新に失敗しました');
+    setIsUpdating(true);
+    
+    try {
+      // 現在の状態を保存（更新前）
+      const currentIsLiked = localIsLiked;
+      
+      // 楽観的更新（UIを先に更新）
+      if (!currentIsLiked) {
+        setLocalLikes(prev => prev + 1);
+        setLocalIsLiked(true);
+      } else {
+        setLocalLikes(prev => Math.max(0, prev - 1));
+        setLocalIsLiked(false);
+      }
+      
+      // Firebaseに更新を送信（更新前の状態を渡す）
+      const success = await toggleLike(comment.id, currentUser, currentIsLiked);
+      
+      if (!success) {
+        // 失敗した場合は元に戻す
+        if (!currentIsLiked) {
+          setLocalLikes(prev => prev - 1);
+          setLocalIsLiked(false);
+        } else {
+          setLocalLikes(prev => prev + 1);
+          setLocalIsLiked(true);
+        }
+        console.error('いいねの更新に失敗しました');
+      }
+    } catch (error) {
+      // エラーが発生した場合も元に戻す
+      // エラー時は元の状態に戻す必要があるので、現在のlocalIsLikedの状態を確認
+      if (localIsLiked) {
+        setLocalLikes(prev => prev - 1);
+        setLocalIsLiked(false);
+      } else {
+        setLocalLikes(prev => prev + 1);
+        setLocalIsLiked(true);
+      }
+      console.error('いいねの更新でエラーが発生:', error);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -74,10 +121,10 @@ export default function MessageBubble({ comment, isOwn, currentUser }: MessageBu
         {/* いいねボタン */}
         <div className={`mt-4 ${isRight ? 'text-right' : 'text-left'} flex ${isRight ? 'justify-end' : 'justify-start'}`}>
           <LikeButton
-            initialLikes={initialLikes}
+            initialLikes={localLikes}
             onLike={handleLike}
-            disabled={!currentUser}
-            isLiked={isLiked}
+            disabled={!currentUser || isUpdating}
+            isLiked={localIsLiked}
           />
         </div>
       </div>
