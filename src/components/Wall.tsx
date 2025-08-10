@@ -23,7 +23,6 @@ export default function Wall({ children }: ReactNode) {
       <header className="chat-header text-center py-8 px-4 relative overflow-hidden">
         {/* 背景装飾 */}
         <div className="absolute inset-0 bg-gradient-to-br from-pink-400/30 via-purple-400/30 to-blue-400/30"></div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hearts" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 15c-2-3-4-6-6-8a6 6 0 0 1 0-8 6 6 0 0 1 8 0 6 6 0 0 1 8 0 6 6 0 0 1 0 8c-2 2-4 5-6 8z" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23hearts)"/></svg>')] opacity-50"></div>
         
         {/* かわいいアイコン */}
         <div className="relative z-10 flex items-center justify-center mb-4">
