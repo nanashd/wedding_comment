@@ -1,8 +1,5 @@
 'use client';
 
-import CommentForm from '@/components/CommentForm';
-import CommentDisplay from '@/components/CommentDisplay';
-
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-sky-50 to-white">
@@ -20,25 +17,34 @@ export default function Home() {
       <div className="fixed bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-sky-200/40 to-transparent rounded-full blur-3xl animate-pulse-slow pointer-events-none" style={{ animationDelay: '4s' }} />
       
       {/* メインコンテンツ */}
-      <div className="relative z-10">
-        {/* ヘッダー */}
-        <div className="text-center py-8">
-          <h1 className="text-5xl font-bold text-gray-800 mb-3">
+      <div className="relative z-10 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold text-gray-800 mb-6">
             💒 結婚式コメントウォール 💒
           </h1>
-          <p className="text-xl text-gray-600">
-            お祝いのメッセージを投稿してください
+          <p className="text-2xl text-gray-600 mb-12">
+            お祝いのメッセージを共有しましょう
           </p>
-        </div>
-        
-        {/* 投稿フォーム */}
-        <div className="container mx-auto px-4 mb-8">
-          <CommentForm />
-        </div>
-        
-        {/* コメント表示 */}
-        <div className="container mx-auto px-4">
-          <CommentDisplay />
+          
+          <div className="space-y-6">
+            <div>
+              <a 
+                href="/post" 
+                className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold text-xl py-4 px-8 rounded-full transition-colors duration-200 shadow-lg hover:shadow-xl"
+              >
+                📝 メッセージを投稿する
+              </a>
+            </div>
+            
+            <div>
+              <a 
+                href="/wall" 
+                className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl py-4 px-8 rounded-full transition-colors duration-200 shadow-lg hover:shadow-xl"
+              >
+                🖥️ スクリーン表示を見る
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
