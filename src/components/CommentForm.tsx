@@ -81,54 +81,62 @@ export default function CommentForm() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg relative">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+    <div className="max-w-md mx-auto p-8 bg-white/90 backdrop-blur-sm rounded-[var(--radius-large)] shadow-[var(--shadow-soft)] relative">
+      <h2 className="text-2xl font-serif font-bold text-center mb-8 text-[var(--ink)]">
         コメントを投稿
       </h2>
       
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-          {error}
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-[var(--radius-bubble)] animate-fadeSlideIn">
+          <p className="text-sm font-sans">{error}</p>
         </div>
       )}
       
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label htmlFor="nickname" className="block text-sm font-medium text-gray-700 mb-1">
-            ニックネーム *
+          <label htmlFor="nickname" className="block text-sm font-medium text-[var(--ink)] mb-2 font-sans">
+            ニックネーム <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             id="nickname"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
-            className="w-full px-3 py-2 text-lg text-gray-900 bg-gray-50 border-[1.5px] border-gray-300 rounded-md placeholder:text-gray-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300 transition-colors"
+            className="w-full px-4 py-3 text-base text-[var(--ink)] bg-white/80 border-2 border-[var(--muted)]/30 rounded-[var(--radius-bubble)] placeholder:text-[var(--muted)]/60 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 transition-all duration-200 font-sans"
             placeholder="あなたの名前"
             required
             maxLength={20}
+            aria-describedby="nickname-help"
           />
+          <p id="nickname-help" className="mt-1 text-xs text-[var(--muted)] font-sans">
+            最大20文字まで
+          </p>
         </div>
 
         <div>
-          <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">
-            コメント *
+          <label htmlFor="comment" className="block text-sm font-medium text-[var(--ink)] mb-2 font-sans">
+            コメント <span className="text-red-500">*</span>
           </label>
           <textarea
             id="comment"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
-            className="w-full px-3 py-2 text-lg text-gray-900 bg-gray-50 border-[1.5px] border-gray-300 rounded-md placeholder:text-gray-400 focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300 resize-none transition-colors"
+            className="w-full px-4 py-3 text-base text-[var(--ink)] bg-white/80 border-2 border-[var(--muted)]/30 rounded-[var(--radius-bubble)] placeholder:text-[var(--muted)]/60 focus:outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent)]/20 resize-none transition-all duration-200 font-sans"
             placeholder="お祝いのメッセージを入力してください"
-            rows={3}
+            rows={4}
             required
             maxLength={200}
+            aria-describedby="comment-help"
           />
+          <p id="comment-help" className="mt-1 text-xs text-[var(--muted)] font-sans">
+            {comment.length}/200文字
+          </p>
         </div>
 
         <button
           type="submit"
           disabled={loading || !nickname.trim() || !comment.trim()}
-          className="w-full bg-green-500 text-white py-3 px-4 rounded-md font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          className="w-full bg-gradient-to-r from-[var(--accent)] to-emerald-500 text-white py-4 px-6 rounded-[var(--radius-bubble)] font-medium font-sans hover:from-emerald-600 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 active:translate-y-0"
         >
           {loading ? '送信中...' : submitted ? '送信完了' : '送信'}
         </button>

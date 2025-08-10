@@ -1,116 +1,141 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* デザイントークン - 上品で温かい配色 */
+  --bg-start: #fff6f3;      /* ピンク寄りアイボリー */
+  --bg-end: #fdeee7;        /* 温かいベージュ */
+  --accent: #2ebd85;        /* ブーケグリーン */
+  --ink: #3a2e2b;           /* 温かいこげ茶 */
+  --muted: #8d7f79;         /* ミュートされたグレー */
+  --bubble-left: #ffffff;   /* 左側（他者）の吹き出し */
+  --bubble-right: #d6f5e8; /* 右側（自分）の吹き出し */
+  --gold-light: #eacc7c;    /* ゴールドライト */
+  --gold-dark: #f7e7b4;     /* ゴールドダーク */
+  
+  /* シャドウとボーダーラジウス */
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --radius-bubble: 22px;
+  --radius-large: 28px;
+  
+  /* フォント */
+  --font-serif: var(--font-noto-serif);
+  --font-sans: var(--font-noto-sans);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* 基本スタイル */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
+  background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+  color: var(--ink);
+  line-height: 1.6;
 }
 
-/* スクリーン用の華やかな背景レイヤー */
-/* 1) パステルグラデーション（薄いエメラルド〜淡いスカイブルー〜白） */
-.screen-wall-bg {
-  background: linear-gradient(135deg, #ECFDF5 0%, #F0F9FF 50%, #ffffff 100%);
-}
-
-/* 2) 紙のような薄いテクスチャ */
-.screen-wall-texture {
-  background-image: url("https://www.transparenttextures.com/patterns/white-paper.png");
-  background-repeat: repeat;
-  background-position: center;
-  background-attachment: fixed;
-  opacity: 0.2;
-  pointer-events: none;
-}
-
-/* 3) bokeh風の光の玉 */
-.screen-wall-bokeh-left {
-  position: absolute;
-  top: 10%;
-  left: 5%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 70%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(3rem);
-  opacity: 0.4;
-  pointer-events: none;
-  animation: pulse-slow 8s ease-in-out infinite;
-}
-
-.screen-wall-bokeh-right {
-  position: absolute;
-  bottom: 10%;
-  right: 5%;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, rgba(14, 165, 233, 0.05) 70%, transparent 100%);
-  border-radius: 50%;
-  filter: blur(3rem);
-  opacity: 0.4;
-  pointer-events: none;
-  animation: pulse-slow 8s ease-in-out infinite reverse;
+/* 見出し用フォント */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif), serif;
 }
 
 /* カスタムアニメーション */
-@keyframes pulse-slow {
-  0%, 100% {
-    transform: translateY(0) scale(1);
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
   }
   50% {
-    transform: translateY(10px) scale(1.05);
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-}
-
-/* トースト通知のアニメーション */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
-  }
-  to {
-    opacity: 1;
+@keyframes floatBokeh {
+  0%, 100% {
     transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+    opacity: 0.5;
   }
 }
 
-@keyframes fade-out {
-  from {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
   }
-  to {
-    opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+  14% {
+    transform: scale(1.3);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.3);
+  }
+  70% {
+    transform: scale(1);
   }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
+/* アニメーションクラス */
+.animate-fadeSlideIn {
+  animation: fadeSlideIn 0.18s ease-out forwards;
 }
 
-.animate-fade-out {
-  animation: fade-out 0.3s ease-in forwards;
+.animate-pop {
+  animation: pop 0.3s ease-out;
+}
+
+.animate-floatBokeh {
+  animation: floatBokeh 8s ease-in-out infinite;
+}
+
+.animate-heartBeat {
+  animation: heartBeat 1.3s ease-in-out;
+}
+
+/* アクセシビリティ対応 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeSlideIn,
+  .animate-pop,
+  .animate-floatBokeh,
+  .animate-heartBeat {
+    animation: none;
+  }
+}
+
+/* フォーカスリング */
+.focus-ring:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* スクロールバーのカスタマイズ */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(142, 127, 121, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(142, 127, 121, 0.7);
 }

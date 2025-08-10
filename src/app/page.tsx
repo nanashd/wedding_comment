@@ -1,52 +1,43 @@
 'use client';
 
+import Wall from '@/components/Wall';
+
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-sky-50 to-white">
-      {/* 背景テクスチャ */}
-      <div 
-        className="fixed inset-0 opacity-20 pointer-events-none"
-        style={{
-          backgroundImage: 'url("https://www.transparenttextures.com/patterns/white-paper.png")',
-          backgroundRepeat: 'repeat'
-        }}
-      />
-      
-      {/* 光の玉アニメーション */}
-      <div className="fixed top-20 left-20 w-96 h-96 bg-gradient-to-br from-emerald-200/40 to-transparent rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-      <div className="fixed bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-sky-200/40 to-transparent rounded-full blur-3xl animate-pulse-slow pointer-events-none" style={{ animationDelay: '4s' }} />
-      
-      {/* メインコンテンツ */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen">
+    <Wall>
+      <div className="flex items-center justify-center min-h-[70vh]">
         <div className="text-center">
-          <h1 className="text-6xl font-bold text-gray-800 mb-6">
-            💒 結婚式コメントウォール 💒
-          </h1>
-          <p className="text-2xl text-gray-600 mb-12">
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-[var(--ink)] mb-8">
             お祝いのメッセージを共有しましょう
-          </p>
+          </h2>
           
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div>
               <a 
                 href="/post" 
-                className="inline-block bg-green-500 hover:bg-green-600 text-white font-bold text-xl py-4 px-8 rounded-full transition-colors duration-200 shadow-lg hover:shadow-xl"
+                className="group inline-block bg-gradient-to-r from-[var(--accent)] to-emerald-500 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-xl py-5 px-10 rounded-[var(--radius-large)] transition-all duration-300 shadow-[var(--shadow-soft)] hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 focus-ring"
               >
-                📝 メッセージを投稿する
+                <span className="inline-block mr-3 group-hover:scale-110 transition-transform duration-200">📝</span>
+                メッセージを投稿する
               </a>
             </div>
             
             <div>
               <a 
                 href="/wall" 
-                className="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold text-xl py-4 px-8 rounded-full transition-colors duration-200 shadow-lg hover:shadow-xl"
+                className="group inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold text-xl py-5 px-10 rounded-[var(--radius-large)] transition-all duration-300 shadow-[var(--shadow-soft)] hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 focus-ring"
               >
-                🖥️ スクリーン表示を見る
+                <span className="inline-block mr-3 group-hover:scale-110 transition-transform duration-200">🖥️</span>
+                スクリーン表示を見る
               </a>
             </div>
           </div>
+          
+          <p className="text-[var(--muted)] mt-12 text-base font-sans">
+            結婚式の余興として、ゲストの皆様からの温かいお言葉をリアルタイムで共有できます
+          </p>
         </div>
       </div>
-    </div>
+    </Wall>
   );
 }

@@ -1,40 +1,20 @@
 'use client';
 
+import Wall from '@/components/Wall';
 import CommentForm from '@/components/CommentForm';
 
 export default function PostPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-sky-50 to-white">
-      {/* 背景テクスチャ */}
-      <div 
-        className="fixed inset-0 opacity-20 pointer-events-none"
-        style={{
-          backgroundImage: 'url("https://www.transparenttextures.com/patterns/white-paper.png")',
-          backgroundRepeat: 'repeat'
-        }}
-      />
-      
-      {/* 光の玉アニメーション */}
-      <div className="fixed top-20 left-20 w-96 h-96 bg-gradient-to-br from-emerald-200/40 to-transparent rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-      <div className="fixed bottom-20 right-20 w-80 h-80 bg-gradient-to-br from-sky-200/40 to-transparent rounded-full blur-3xl animate-pulse-slow pointer-events-none" style={{ animationDelay: '4s' }} />
-      
-      {/* メインコンテンツ */}
-      <div className="relative z-10">
-        {/* ヘッダー */}
-        <div className="text-center py-8">
-          <h1 className="text-5xl font-bold text-gray-800 mb-3">
-            💒 結婚式コメントウォール 💒
-          </h1>
-          <p className="text-xl text-gray-600">
-            お祝いのメッセージを投稿してください
-          </p>
-        </div>
-        
-        {/* 投稿フォーム */}
-        <div className="container mx-auto px-4">
-          <CommentForm />
-        </div>
+    <Wall>
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-serif font-bold text-[var(--ink)] mb-4">
+          お祝いのメッセージを投稿
+        </h2>
+        <p className="text-lg text-[var(--muted)] font-sans">
+          新郎新婦への温かいお言葉をお聞かせください
+        </p>
       </div>
-    </div>
+      <CommentForm />
+    </Wall>
   );
 }
