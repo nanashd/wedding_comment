@@ -87,7 +87,7 @@ export default function LikeButton({
           ${isAnimating && !isLiked ? 'animate-pop scale-110' : ''}
         `}
       >
-        {isLiked ? '💚' : '🤍'}
+        {isLiked ? '❤️' : '🤍'}
       </span>
       
       {/* いいね数 */}

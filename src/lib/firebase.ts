@@ -51,15 +51,19 @@ export default app;
 // いいね機能の関数
 export const toggleLike = async (commentId: string, nickname: string, isLiked: boolean) => {
   try {
+    console.log('toggleLike開始:', { commentId, nickname, isLiked });
+    
     const commentRef = doc(db, 'messages', commentId);
     
     if (isLiked) {
+      console.log('いいねを削除中...');
       // いいねを削除
       await updateDoc(commentRef, {
         likes: increment(-1),
         likedBy: arrayRemove(nickname)
       });
     } else {
+      console.log('いいねを追加中...');
       // いいねを追加
       await updateDoc(commentRef, {
         likes: increment(1),
@@ -67,6 +71,7 @@ export const toggleLike = async (commentId: string, nickname: string, isLiked: b
       });
     }
     
+    console.log('toggleLike成功');
     return true;
   } catch (error) {
     console.error('いいねの更新に失敗:', error);
