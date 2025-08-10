@@ -6,7 +6,7 @@ interface WallProps {
   children: ReactNode;
 }
 
-export default function Wall({ children }: ReactNode) {
+export default function Wall({ children }: WallProps) {
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
       {/* かわいい装飾要素 */}

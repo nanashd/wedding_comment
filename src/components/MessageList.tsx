@@ -67,7 +67,7 @@ export default function MessageList() {
             </div>
           ) : (
             <div className="space-y-2">
-              {comments.map((comment, index) => (
+              {comments.map((comment) => (
                 <div key={comment.id}>
                   <MessageBubble 
                     comment={comment} 
