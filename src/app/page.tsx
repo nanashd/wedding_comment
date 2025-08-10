@@ -1,42 +1,37 @@
 'use client';
 
 import Wall from '@/components/Wall';
+import CommentForm from '@/components/CommentForm';
+import MessageList from '@/components/MessageList';
 
 export default function Home() {
   return (
     <Wall>
-      <div className="flex items-center justify-center min-h-[70vh]">
-        <div className="text-center">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-[var(--ink)] mb-8">
-            お祝いのメッセージを共有しましょう
+      <div className="space-y-8">
+        {/* コメント投稿フォーム */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-serif font-bold text-[var(--ink)] mb-4">
+            お祝いのメッセージを投稿
           </h2>
-          
-          <div className="space-y-8">
-            <div>
-              <a 
-                href="/post" 
-                className="group inline-block bg-gradient-to-r from-[var(--accent)] to-emerald-500 hover:from-emerald-600 hover:to-emerald-700 text-white font-bold text-xl py-5 px-10 rounded-[var(--radius-large)] transition-all duration-300 shadow-[var(--shadow-soft)] hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 focus-ring"
-              >
-                <span className="inline-block mr-3 group-hover:scale-110 transition-transform duration-200">📝</span>
-                メッセージを投稿する
-              </a>
-            </div>
-            
-            <div>
-              <a 
-                href="/wall" 
-                className="group inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold text-xl py-5 px-10 rounded-[var(--radius-large)] transition-all duration-300 shadow-[var(--shadow-soft)] hover:shadow-lg transform hover:-translate-y-1 active:translate-y-0 focus-ring"
-              >
-                <span className="inline-block mr-3 group-hover:scale-110 transition-transform duration-200">🖥️</span>
-                スクリーン表示を見る
-              </a>
-            </div>
-          </div>
-          
-          <p className="text-[var(--muted)] mt-12 text-base font-sans">
-            結婚式の余興として、ゲストの皆様からの温かいお言葉をリアルタイムで共有できます
+          <p className="text-lg text-[var(--muted)] font-sans">
+            新郎新婦への温かいお言葉をお聞かせください
           </p>
         </div>
+        
+        <CommentForm />
+        
+        {/* 区切り線 */}
+        <div className="relative my-12">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-pink-200"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-white text-pink-500 font-medium">💕 みんなのメッセージ 💕</span>
+          </div>
+        </div>
+        
+        {/* メッセージリスト */}
+        <MessageList />
       </div>
     </Wall>
   );
