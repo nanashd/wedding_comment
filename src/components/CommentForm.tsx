@@ -9,6 +9,7 @@ export default function CommentForm() {
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,16 +17,23 @@ export default function CommentForm() {
 
     console.log('投稿開始 - loading状態をtrueに設定');
     setLoading(true);
+    setError(null);
     
     try {
       console.log('Firestore保存処理開始');
+      console.log('保存するデータ:', {
+        nickname: nickname.trim(),
+        comment: comment.trim(),
+        createdAt: 'serverTimestamp()'
+      });
+      
       // Firestoreに保存
-      await addDoc(collection(db, "messages"), {
+      const docRef = await addDoc(collection(db, "messages"), {
         nickname: nickname.trim(),
         comment: comment.trim(),
         createdAt: serverTimestamp(),
       });
-      console.log('Firestore保存完了');
+      console.log('Firestore保存完了 - ドキュメントID:', docRef.id);
 
       console.log('フォームクリア処理開始');
       // フォームをクリア
@@ -43,9 +51,23 @@ export default function CommentForm() {
         console.log('送信完了状態解除完了');
       }, 2000);
 
-    } catch (error) {
-      console.error('送信エラー:', error);
-      alert('投稿に失敗しました。もう一度お試しください。');
+    } catch (error: any) {
+      console.error('送信エラー詳細:', error);
+      console.error('エラーコード:', error.code);
+      console.error('エラーメッセージ:', error.message);
+      
+      let errorMessage = '投稿に失敗しました。';
+      
+      if (error.code === 'permission-denied') {
+        errorMessage = '権限がありません。Firestoreのセキュリティルールを確認してください。';
+      } else if (error.code === 'unavailable') {
+        errorMessage = 'Firebaseサービスが利用できません。ネットワーク接続を確認してください。';
+      } else if (error.code === 'unauthenticated') {
+        errorMessage = '認証が必要です。';
+      }
+      
+      setError(errorMessage);
+      alert(errorMessage);
     } finally {
       console.log('finallyブロック実行 - loading状態をfalseに設定');
       // 成功・失敗問わず必ずローディング解除
@@ -59,6 +81,12 @@ export default function CommentForm() {
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
         コメントを投稿
       </h2>
+      
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
