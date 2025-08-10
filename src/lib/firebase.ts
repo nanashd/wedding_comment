@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 // 環境変数から設定を読み込み
 const firebaseConfig = {
@@ -21,7 +21,7 @@ console.log('Firebase設定:', {
 });
 
 // Initialize Firebase
-let app;
+let app: FirebaseApp;
 try {
   app = initializeApp(firebaseConfig);
   console.log('Firebase初期化成功');
@@ -31,7 +31,7 @@ try {
 }
 
 // Initialize Firestore
-let db;
+let db: Firestore;
 try {
   db = getFirestore(app);
   console.log('Firestore初期化成功');

@@ -51,19 +51,23 @@ export default function CommentForm() {
         console.log('送信完了状態解除完了');
       }, 2000);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('送信エラー詳細:', error);
-      console.error('エラーコード:', error.code);
-      console.error('エラーメッセージ:', error.message);
       
       let errorMessage = '投稿に失敗しました。';
       
-      if (error.code === 'permission-denied') {
-        errorMessage = '権限がありません。Firestoreのセキュリティルールを確認してください。';
-      } else if (error.code === 'unavailable') {
-        errorMessage = 'Firebaseサービスが利用できません。ネットワーク接続を確認してください。';
-      } else if (error.code === 'unauthenticated') {
-        errorMessage = '認証が必要です。';
+      if (error && typeof error === 'object' && 'code' in error) {
+        const firebaseError = error as { code: string; message?: string };
+        console.error('エラーコード:', firebaseError.code);
+        console.error('エラーメッセージ:', firebaseError.message);
+        
+        if (firebaseError.code === 'permission-denied') {
+          errorMessage = '権限がありません。Firestoreのセキュリティルールを確認してください。';
+        } else if (firebaseError.code === 'unavailable') {
+          errorMessage = 'Firebaseサービスが利用できません。ネットワーク接続を確認してください。';
+        } else if (firebaseError.code === 'unauthenticated') {
+          errorMessage = '認証が必要です。';
+        }
       }
       
       setError(errorMessage);
