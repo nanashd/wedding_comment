@@ -114,13 +114,18 @@ export default function MessageBubble({ comment, isOwn, currentUser }: MessageBu
   const isRight = isOwn;
   const containerClass = isRight ? 'justify-end' : 'justify-start';
   const avatarClass = isRight ? 'ml-4' : 'mr-4';
+  
+  // 左右配置に応じたアニメーション
+  const getAnimationClass = (isRight: boolean) => {
+    return isRight ? 'animate-fadeSlideInRight' : 'animate-fadeSlideInLeft';
+  };
 
   return (
-    <div className={`flex ${containerClass} my-5 mx-4 animate-fadeSlideIn`}>
+    <div className={`flex ${containerClass} my-5 mx-4 ${getAnimationClass(isRight)}`}>
       <div className={`max-w-[78%] ${isRight ? 'order-2' : 'order-1'}`}>
         <div className={`flex items-start ${isRight ? 'flex-row-reverse' : 'flex-row'}`}>
           {/* 上品なアバター */}
-          <div className={`w-14 h-14 rounded-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center text-2xl shadow-elegant ${avatarClass} flex-shrink-0 border border-accent/30 ring-1 ring-accent/20`}>
+          <div className={`w-14 h-14 rounded-full bg-gradient-to-br from-accent/20 to-accent/40 flex items-center justify-center text-2xl shadow-elegant ${avatarClass} flex-shrink-0 border border-accent/30 ring-1 ring-accent/20 animate-fadeSlideInUp`}>
             {getIcon(comment.nickname)}
           </div>
           
@@ -132,7 +137,7 @@ export default function MessageBubble({ comment, isOwn, currentUser }: MessageBu
             </div>
             
             {/* チャットバブル本体 */}
-            <div className={`relative ${isRight ? 'bg-bubble-right' : 'bg-bubble-left'} rounded-[28px] px-5 py-3 shadow-elegant border border-accent/10 shadow-inner-soft`}>
+            <div className={`relative ${isRight ? 'bg-bubble-right' : 'bg-bubble-left'} rounded-[28px] px-5 py-3 shadow-elegant border border-accent/10 shadow-inner-soft animate-fadeSlideInUp`}>
               {/* チャットバブルの尻尾 */}
               <div className={`absolute top-4 ${isRight ? '-right-2' : '-left-2'} w-3 h-3 ${isRight ? 'bg-bubble-right' : 'bg-bubble-left'} transform rotate-45 border-r border-b ${isRight ? 'border-accent/20' : 'border-accent/10'}`}></div>
               
@@ -149,7 +154,7 @@ export default function MessageBubble({ comment, isOwn, currentUser }: MessageBu
               </div>
               
               {/* いいねボタン */}
-              <div className={`${isRight ? 'mr-auto' : 'ml-auto'}`}>
+              <div className={`${isRight ? 'mr-auto' : 'ml-auto'} animate-fadeSlideInUp`}>
                 <LikeButton
                   initialLikes={localLikes}
                   onLike={handleLike}

@@ -37,6 +37,10 @@ module.exports = {
       },
       animation: {
         'fadeSlideIn': 'fadeSlideIn 0.18s ease-out',
+        'fadeSlideInUp': 'fadeSlideInUp 0.6s ease-out',
+        'fadeSlideInDown': 'fadeSlideInDown 0.6s ease-out',
+        'fadeSlideInLeft': 'fadeSlideInLeft 0.6s ease-out',
+        'fadeSlideInRight': 'fadeSlideInRight 0.6s ease-out',
         'pop': 'pop 0.3s ease-out',
         'floatBokeh': 'floatBokeh 6s ease-in-out infinite',
         'heartBeat': 'heartBeat 1.3s ease-in-out',
@@ -54,6 +58,46 @@ module.exports = {
           'to': {
             opacity: '1',
             transform: 'translateY(0)',
+          },
+        },
+        fadeSlideInUp: {
+          'from': {
+            opacity: '0',
+            transform: 'translateY(20px)',
+          },
+          'to': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        fadeSlideInDown: {
+          'from': {
+            opacity: '0',
+            transform: 'translateY(-20px)',
+          },
+          'to': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        fadeSlideInLeft: {
+          'from': {
+            opacity: '0',
+            transform: 'translateX(-20px)',
+          },
+          'to': {
+            opacity: '1',
+            transform: 'translateX(0)',
+          },
+        },
+        fadeSlideInRight: {
+          'from': {
+            opacity: '0',
+            transform: 'translateX(20px)',
+          },
+          'to': {
+            opacity: '1',
+            transform: 'translateX(0)',
           },
         },
         pop: {
